@@ -57,32 +57,6 @@ A comprehensive web-based registration and management system for Polytechnic Uni
 - Web server (Apache/Nginx) or PHP built-in server
 - Git for version control
 
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/pup-taguig-registration.git
-   cd pup-taguig-registration
-   ```
-
-2. **Database Setup**
-   ```bash
-   # Create database
-   mysql -u root -p
-   CREATE DATABASE pup_taguig_db;
-   
-   # Import database schema (if available)
-   mysql -u root -p pup_taguig_db < database/schema.sql
-   ```
-
-3. **Configure Database Connection**
-   ```php
-   // Edit api/db.php with your database credentials
-   $host = 'localhost';
-   $dbname = 'pup_taguig_db';
-   $username = 'your_username';
-   $password = 'your_password';
-   ```
 
 4. **Start Development Server**
    ```bash
@@ -239,22 +213,7 @@ docs(readme): update installation instructions
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-For support and questions:
-- Create an issue on GitHub
-- Contact the development team
-- Check the documentation in the `/docs` folder (if available)
-
-## 🔄 Version History
-
-- **v1.0.0** - Initial release with basic registration and management features
-- **v1.1.0** - Added faculty registration system and improved UI/UX
-- **v1.2.0** - Enhanced course management and enrollment features
 
 ---
 
