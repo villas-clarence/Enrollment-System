@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Registration API</title>
+</head>
+<body>
+    <h1>Test Registration API</h1>
+    <button onclick="testRegistration()">Test Registration</button>
+    <div id="result"></div>
+    
+    <script>
+        async function testRegistration() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing registration...';
+            
+            const testData = {
+                role: 'student',
+                existing_student: true,
+                student_no: '2025-00102-TG-0', // Daniel
+                first_name: 'Daniel Perez',
+                last_name: 'Adto',
+                email: 'daniel.test@pup.edu.ph',
+                password: 'student123'
+            };
+            
+            try {
+                console.log('Sending registration request...');
+                const response = await fetch('api/register.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                const result = await response.json();
+                console.log('Response data:', result);
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `<p style="color: green;">SUCCESS: ${result.message}</p>`;
+                } else {
+                    resultDiv.innerHTML = `<p style="color: red;">ERROR: ${result.message}</p>`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.innerHTML = `<p style="color: red;">Network Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

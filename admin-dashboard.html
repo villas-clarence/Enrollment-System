@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - PUP Taguig</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        
+        body { 
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
+            min-height:100vh; 
+            padding:20px; 
+            color: #333;
+        }
+        
+        .header-banner {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .university-logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .header-info h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+        
+        .header-info p {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .user-details h3 {
+            color: #1e3c72;
+            font-size: 1.1rem;
+            margin-bottom: 3px;
+        }
+        
+        .user-role {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .logout-btn {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-left: 15px;
+        }
+        
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108,117,125,0.3);
+        }
+        
+        .container { 
+            background: rgba(255,255,255,0.95); 
+            max-width: 1600px; 
+            width: 100%; 
+            margin: 0 auto; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15); 
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .dashboard-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .dashboard-title i {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #dc3545;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .modules-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .module-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-color: #dc3545;
+            background: linear-gradient(135deg, #ffffff, #fff5f5);
+            text-decoration: none;
+            color: #1e3c72;
+        }
+        
+        .module-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .module-content {
+            flex: 1;
+        }
+        
+        .module-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #1e3c72;
+        }
+        
+        .module-description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .header-banner {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header-banner">
+        <div class="header-left">
+            <div class="university-logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="header-info">
+                <h1>PUP Taguig - Admin Portal</h1>
+            </div>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="user-details">
+                <span class="user-role">Administrator</span>
+            </div>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="dashboard-title">
+            <i class="fas fa-user-shield"></i>
+            Administrator Dashboard
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalStudents">0</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalFaculty">0</div>
+                <div class="stat-label">Faculty Members</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalCourses">0</div>
+                <div class="stat-label">Active Courses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalDepartments">0</div>
+                <div class="stat-label">Departments</div>
+            </div>
+        </div>
+
+        <!-- People Management -->
+        <div class="modules-section">
+            <div class="section-title">
+                <i class="fas fa-users"></i>
+                People Management
+            </div>
+            
+            <div class="modules-grid">
+                <a href="student.html" class="module-card">
+                    <div class="module-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-title">Students</div>
+                        <div class="module-description">Add, edit, and manage student records</div>
+                    </div>
+                </a>
+
+                <a href="instructor.html" class="module-card">
+                    <div class="module-icon">
+                        <i class="fas fa-chalkboard-user"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-title">Faculty</div>
+                        <div class="module-description">Manage faculty members and instructors</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Academic Setup -->
+        <div class="modules-section">
+            <div class="section-title">
+                <i class="fas fa-graduation-cap"></i>
+                Academic Setup
+            </div>
+            
+            <div class="modules-grid">
+                <a href="department.html" class="module-card">
+                    <div class="module-icon">
+                        <i class="fas fa-building-columns"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-title">Departments</div>
+                        <div class="module-description">Manage academic departments</div>
+                    </div>
+                </a>
+
+                <a href="program.html" class="module-card">
+                    <div class="module-icon">
+                        <i class="fas fa-scroll"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-title">Programs</div>
+                        <div class="module-description">Manage degree programs and tracks</div>
+                    </div>
+                </a>
+
+                <a href="course.html" class="module-card">
+                    <div class="module-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-title">Courses</div>
+                        <div class="module-description">Maintain course catalog and curriculum</div>
+                    </div>
+                </a>
+
+                <a href="course_prerequisite.html" class="module-card">
+                    <div class="module-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-title">Prerequisites</div>
+                        <div class="module-description">Define course prerequisite relationships</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Class Scheduling -->
+        <div class="modules-section">
+            <div class="section-title">
+                <i class="fas fa-calendar-alt"></i>
+                Class Scheduling
+            </div>
+            
+            <div class="modules-grid">
+                <a href="term.html" class="module-card">
+                    <div class="module-icon">
+                        <i class="fas fa-calendar-days"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-title">Academic Terms</div>
+                        <div class="module-description">Configure semesters and academic periods</div>
+                    </div>
+                </a>
+
+                <a href="room.html" class="module-card">
+                    <div class="module-icon">
+                        <i class="fas fa-door-open"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-title">Rooms</div>
+                        <div class="module-description">Manage classrooms and facilities</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Enrollment -->
+        <div class="modules-section">
+            <div class="section-title">
+                <i class="fas fa-clipboard-list"></i>
+                Enrollment
+            </div>
+            
+            <div class="modules-grid">
+                <a href="section.html" class="module-card">
+                    <div class="module-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-title">Section Management</div>
+                        <div class="module-description">Create sections, assign instructors, and manage class schedules</div>
+                    </div>
+                </a>
+
+                <a href="section_enrollment.html" class="module-card">
+                    <div class="module-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-title">Block Enrollment</div>
+                        <div class="module-description">Enroll student to entire block (all courses in section)</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in and has admin role
+        function checkAuth() {
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+            const userRole = sessionStorage.getItem('userRole');
+            const username = sessionStorage.getItem('username');
+            
+            console.log('Admin Dashboard Auth check - isLoggedIn:', isLoggedIn, 'userRole:', userRole);
+            
+            if (!isLoggedIn || userRole !== 'admin') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Re-set session to ensure it persists
+            sessionStorage.setItem('userRole', 'admin');
+            sessionStorage.setItem('isLoggedIn', 'true');
+            
+            // Load dashboard stats
+            loadDashboardStats();
+        }
+        
+        // Load real stats from database
+        async function loadDashboardStats() {
+            try {
+                // Fetch students count - use pagination total
+                const studentsRes = await fetch('api/student.php?limit=1');
+                const studentsData = await studentsRes.json();
+                if (studentsData.success && studentsData.pagination) {
+                    document.getElementById('totalStudents').textContent = studentsData.pagination.total;
+                }
+                
+                // Fetch faculty count
+                const facultyRes = await fetch('api/instructor.php');
+                const facultyData = await facultyRes.json();
+                if (facultyData.success) {
+                    document.getElementById('totalFaculty').textContent = facultyData.data.length;
+                }
+                
+                // Fetch courses count
+                const coursesRes = await fetch('api/course.php');
+                const coursesData = await coursesRes.json();
+                if (coursesData.success) {
+                    document.getElementById('totalCourses').textContent = coursesData.data.length;
+                }
+                
+                // Fetch departments count
+                const deptRes = await fetch('api/department.php');
+                const deptData = await deptRes.json();
+                if (deptData.success) {
+                    document.getElementById('totalDepartments').textContent = deptData.data.length;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+        
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'login.html';
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', checkAuth);
+    </script>
+</body>
+</html>

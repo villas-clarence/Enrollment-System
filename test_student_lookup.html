@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Student Lookup</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { padding: 8px; width: 300px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .result { margin-top: 20px; padding: 15px; border-radius: 4px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>Test Student Lookup API</h1>
+    
+    <form onsubmit="testLookup(event)">
+        <div class="form-group">
+            <label for="student_no">Student Number:</label>
+            <input type="text" id="student_no" value="2023-00424-TG-0" placeholder="e.g., 2023-00424-TG-0">
+        </div>
+        <button type="submit">Test Lookup</button>
+    </form>
+    
+    <div id="result"></div>
+    
+    <script>
+        async function testLookup(event) {
+            event.preventDefault();
+            
+            const studentNo = document.getElementById('student_no').value.trim();
+            const resultDiv = document.getElementById('result');
+            
+            if (!studentNo) {
+                resultDiv.innerHTML = '<div class="error">Please enter a student number</div>';
+                return;
+            }
+            
+            try {
+                const response = await fetch('api/student_lookup.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ student_no: studentNo })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (result.found) {
+                        const student = result.student;
+                        resultDiv.innerHTML = `
+                            <div class="success">
+                                <h3>Student Found!</h3>
+                                <p><strong>Name:</strong> ${student.first_name} ${student.middle_initial || ''} ${student.last_name}</p>
+                                <p><strong>Student Number:</strong> ${student.student_no}</p>
+                                <p><strong>Email:</strong> ${student.email || 'Not set'}</p>
+                                <p><strong>Program:</strong> ${student.program_code} - ${student.program_name}</p>
+                                <p><strong>Year Level:</strong> ${student.year_level}</p>
+                                <p><strong>Has Account:</strong> ${student.has_account ? 'Yes' : 'No'}</p>
+                            </div>
+                        `;
+                    } else {
+                        resultDiv.innerHTML = '<div class="info">Student not found in database</div>';
+                    }
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Error: ${result.message}</div>`;
+                }
+            } catch (error) {
+                console.error('Lookup error:', error);
+                resultDiv.innerHTML = `<div class="error">Network error: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

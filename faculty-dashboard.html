@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        
+        body { 
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
+            min-height:100vh; 
+            padding:20px; 
+            color: #333;
+        }
+        
+        .header-banner {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .university-logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+        }
+        
+        .header-info h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+        
+        .user-details h3 {
+            color: #1e3c72;
+            font-size: 0.95rem;
+            order: 2;
+        }
+        
+        .user-role {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 10px rgba(23,162,184,0.3);
+            text-transform: uppercase;
+            order: 1;
+        }
+        
+        .logout-btn {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 22px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(220,53,69,0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(220,53,69,0.4);
+        }
+        
+        .container { 
+            background: rgba(255,255,255,0.95); 
+            max-width: 1200px; 
+            width: 100%; 
+            margin: 0 auto; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15); 
+            padding: 40px;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Info Cards Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+        }
+        
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .info-card-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .icon-info { background: linear-gradient(135deg, #1e3c72, #2a5298); }
+        .icon-department { background: linear-gradient(135deg, #28a745, #20c997); }
+        
+        .info-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+        
+        .info-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .info-label {
+            font-size: 0.85rem;
+            color: #1e3c72;
+            font-weight: 700 !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        .info-value {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        /* Quick Links */
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .quick-link {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .quick-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-color: #1e3c72;
+            background: linear-gradient(135deg, #ffffff, #f0f4ff);
+        }
+        
+        .quick-link-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .quick-link-content {
+            flex: 1;
+        }
+        
+        .quick-link-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+        
+        .quick-link-desc {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* My Classes Section */
+        .classes-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e3c72;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .classes-table {
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .classes-table th,
+        .classes-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .classes-table th {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+        
+        .classes-table tbody tr:hover {
+            background: rgba(23,162,184,0.05);
+        }
+        
+        .course-code-badge {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .section-badge {
+            background: #e9ecef;
+            color: #333;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .students-badge {
+            background: #d4edda;
+            color: #155724;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .btn-view-students {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-view-students:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(23,162,184,0.3);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 85vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .modal-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+        
+        .modal-body {
+            padding: 30px;
+            max-height: calc(85vh - 140px);
+            overflow-y: auto;
+        }
+        
+        .section-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .section-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .section-info-label {
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .section-info-value {
+            font-size: 1.1rem;
+            color: #1e3c72;
+            font-weight: 600;
+        }
+        
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .students-table th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #1e3c72;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .students-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .students-table tbody tr:hover {
+            background: rgba(30,60,114,0.05);
+        }
+        
+        .no-students {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .no-students i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-export {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-export:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40,167,69,0.3);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #1e3c72;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        @media (max-width: 992px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .info-grid, .quick-links {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-banner {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .container {
+                padding: 20px;
+            }
+            .classes-table {
+                font-size: 0.85rem;
+            }
+            .classes-table th,
+            .classes-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header-banner">
+        <div class="header-left">
+            <div class="university-logo">
+                <i class="fas fa-chalkboard-user"></i>
+            </div>
+            <div class="header-info">
+                <h1>Faculty Dashboard</h1>
+            </div>
+        </div>
+        <div class="user-info">
+            <div class="user-details">
+                <h3 id="userName">Loading...</h3>
+                <span class="user-role">Faculty</span>
+            </div>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalCourses">0</div>
+                <div class="stat-label">Teaching Courses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalStudents">0</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalSections">0</div>
+                <div class="stat-label">Class Sections</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="deptCode">-</div>
+                <div class="stat-label">Department</div>
+            </div>
+        </div>
+
+        <!-- Info Cards -->
+        <div class="info-grid">
+            <!-- Faculty Info Card -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon icon-info">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <div class="info-card-title">My Information</div>
+                </div>
+                <div class="info-content">
+                    <div class="info-item">
+                        <span class="info-label"><strong>Employee ID</strong></span>
+                        <span class="info-value" id="employeeId">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><strong>Full Name</strong></span>
+                        <span class="info-value" id="fullName">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><strong>Email</strong></span>
+                        <span class="info-value" id="email">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><strong>Position</strong></span>
+                        <span class="info-value" id="position">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Department Card -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon icon-department">
+                        <i class="fas fa-building-columns"></i>
+                    </div>
+                    <div class="info-card-title">My Department</div>
+                </div>
+                <div class="info-content">
+                    <div class="info-item">
+                        <span class="info-label"><strong>Department Name</strong></span>
+                        <span class="info-value" id="deptName">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><strong>Department Code</strong></span>
+                        <span class="info-value" id="deptCodeFull">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Classes Section -->
+        <div class="classes-section" id="classesSection">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-chalkboard-user"></i>
+                    My Classes
+                </div>
+                <div class="export-buttons">
+                    <button class="btn-export" onclick="exportMyClassesCSV()">
+                        <i class="fas fa-file-csv"></i> Export CSV
+                    </button>
+                    <button class="btn-export" onclick="exportMyClassesPDF()">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </button>
+                </div>
+            </div>
+            <div id="classesContainer">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading classes...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Students Modal -->
+    <div id="studentsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-users"></i> Class Roster</h2>
+                <button class="modal-close" onclick="closeStudentsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="section-info" id="modalSectionInfo">
+                    <!-- Section info will be loaded here -->
+                </div>
+                
+                <div class="export-buttons">
+                    <button class="btn-export" onclick="exportStudentsCSV()">
+                        <i class="fas fa-file-csv"></i> Export CSV
+                    </button>
+                    <button class="btn-export" onclick="exportStudentsPDF()">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </button>
+                </div>
+                
+                <div id="studentsTableContainer">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <div>Loading students...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        function checkAuth() {
+            try {
+                const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+                const userRole = sessionStorage.getItem('userRole');
+                
+                console.log('Faculty Dashboard Auth check - isLoggedIn:', isLoggedIn, 'userRole:', userRole);
+                
+                if (!isLoggedIn || userRole !== 'faculty') {
+                    // Don't redirect if already on login page to prevent loops
+                    if (!window.location.href.includes('faculty-login.html')) {
+                        window.location.href = 'faculty-login.html';
+                    }
+                    return false;
+                }
+                
+                // Re-set the session to ensure it persists
+                sessionStorage.setItem('userRole', 'faculty');
+                sessionStorage.setItem('isLoggedIn', 'true');
+                
+                return true;
+            } catch (error) {
+                console.error('SessionStorage blocked by browser:', error);
+                alert('Your browser is blocking storage. Please:\n1. Disable "Tracking Prevention" in Edge settings\n2. Or use Chrome/Firefox\n3. Or allow this site in privacy settings');
+                return false;
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'faculty-login.html';
+        }
+        
+        // Scroll to classes
+        function scrollToClasses() {
+            document.getElementById('classesSection').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+        
+        // Load faculty data
+        async function loadFacultyData() {
+            const userId = sessionStorage.getItem('userId');
+            const username = sessionStorage.getItem('username');
+            
+            console.log('Loading faculty data - userId:', userId, 'username:', username);
+            
+            if (!userId) {
+                console.error('No userId found in session - redirecting to login');
+                alert('Session expired. Please log in again.');
+                logout();
+                return;
+            }
+            
+            document.getElementById('userName').textContent = username || 'Faculty';
+            
+            try {
+                // Get faculty courses and info
+                console.log('Fetching:', `api/faculty_courses.php?instructor_id=${userId}`);
+                const response = await fetch(`api/faculty_courses.php?instructor_id=${userId}`);
+                const result = await response.json();
+                
+                console.log('Faculty API response:', result);
+                
+                if (result.success && result.data) {
+                    const { faculty, assigned_sections, summary } = result.data;
+                    
+                    console.log('Faculty info:', faculty);
+                    
+                    // Update stats
+                    document.getElementById('totalCourses').textContent = summary.total_courses || 0;
+                    document.getElementById('totalStudents').textContent = summary.total_students || 0;
+                    document.getElementById('totalSections').textContent = summary.total_sections || 0;
+                    document.getElementById('deptCode').textContent = faculty?.dept_code || '-';
+                    
+                    // Update faculty info
+                    if (faculty) {
+                        document.getElementById('employeeId').textContent = faculty.employee_id || 'N/A';
+                        document.getElementById('fullName').textContent = `${faculty.first_name || ''} ${faculty.last_name || ''}`.trim() || 'N/A';
+                        document.getElementById('userName').textContent = faculty.employee_id || username;
+                        document.getElementById('email').textContent = faculty.email || 'Not set';
+                        document.getElementById('position').textContent = faculty.position || 'Faculty';
+                        document.getElementById('deptName').textContent = faculty.dept_name || 'Not assigned';
+                        document.getElementById('deptCodeFull').textContent = faculty.dept_code || 'N/A';
+                    } else {
+                        console.log('No faculty data returned');
+                        showNoData();
+                    }
+                    
+                    // Load classes table
+                    loadClassesTable(assigned_sections);
+                } else {
+                    console.log('API returned error or no data');
+                    showNoData();
+                }
+            } catch (error) {
+                console.error('Error loading faculty data:', error);
+                showNoData();
+            }
+        }
+        
+        // Load classes table
+        function loadClassesTable(sections) {
+            const container = document.getElementById('classesContainer');
+            
+            // Store for export
+            myClassesData = sections || [];
+            
+            if (!sections || sections.length === 0) {
+                container.innerHTML = '<div class="no-data"><i class="fas fa-info-circle"></i> No assigned classes yet.</div>';
+                return;
+            }
+            
+            let tableHTML = `
+                <table class="classes-table">
+                    <thead>
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Course Name</th>
+                            <th>Section</th>
+                            <th>Schedule</th>
+                            <th>Room</th>
+                            <th>Students</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            sections.forEach(section => {
+                const schedule = section.day_pattern ? 
+                    `${section.day_pattern} ${formatTime(section.start_time)} - ${formatTime(section.end_time)}` : 
+                    'TBA';
+                
+                tableHTML += `
+                    <tr>
+                        <td><span class="course-code-badge">${section.course_code}</span></td>
+                        <td>${section.course_title}</td>
+                        <td><span class="section-badge">${section.section_code}</span></td>
+                        <td>${schedule}</td>
+                        <td>${section.room_name || 'TBA'}</td>
+                        <td><span class="students-badge">${section.student_count}/${section.max_capacity || '-'}</span></td>
+                        <td>
+                            <button class="btn-view-students" onclick="viewStudents(${section.section_id}, '${section.course_code}', '${section.section_code}')">
+                                <i class="fas fa-users"></i> View Students
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+        }
+        
+        // Format time
+        function formatTime(timeString) {
+            if (!timeString) return '';
+            const time = new Date('1970-01-01T' + timeString + 'Z');
+            return time.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true,
+                timeZone: 'UTC'
+            });
+        }
+        
+        // Show no data
+        function showNoData() {
+            document.getElementById('employeeId').textContent = 'N/A';
+            document.getElementById('fullName').textContent = 'N/A';
+            document.getElementById('email').textContent = 'N/A';
+            document.getElementById('position').textContent = 'N/A';
+            document.getElementById('deptName').textContent = 'N/A';
+            document.getElementById('deptCodeFull').textContent = 'N/A';
+            document.getElementById('classesContainer').innerHTML = '<div class="no-data">Unable to load faculty data.</div>';
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            if (checkAuth()) {
+                loadFacultyData();
+            }
+        });
+        
+        // Global variables for modal
+        let currentSectionData = null;
+        let currentStudentsData = [];
+        
+        // View students in modal
+        async function viewStudents(sectionId, courseCode, sectionCode) {
+            const modal = document.getElementById('studentsModal');
+            modal.classList.add('show');
+            
+            try {
+                const response = await fetch(`api/section_students.php?section_id=${sectionId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentSectionData = data.section;
+                    currentStudentsData = data.students;
+                    
+                    // Update section info
+                    document.getElementById('modalSectionInfo').innerHTML = `
+                        <div class="section-info-item">
+                            <div class="section-info-label">Course</div>
+                            <div class="section-info-value">${data.section.course_code} - ${data.section.course_title}</div>
+                        </div>
+                        <div class="section-info-item">
+                            <div class="section-info-label">Section</div>
+                            <div class="section-info-value">${data.section.section_code}</div>
+                        </div>
+                        <div class="section-info-item">
+                            <div class="section-info-label">Enrolled Students</div>
+                            <div class="section-info-value">${data.total_students} / ${data.section.max_capacity || 'N/A'}</div>
+                        </div>
+                    `;
+                    
+                    // Display students table
+                    displayStudentsTable(data.students);
+                } else {
+                    alert('Error loading students: ' + data.message);
+                    closeStudentsModal();
+                }
+            } catch (error) {
+                console.error('Error fetching students:', error);
+                alert('Error loading students. Please try again.');
+                closeStudentsModal();
+            }
+        }
+        
+        // Display students table
+        function displayStudentsTable(students) {
+            const container = document.getElementById('studentsTableContainer');
+            
+            if (!students || students.length === 0) {
+                container.innerHTML = `
+                    <div class="no-students">
+                        <i class="fas fa-user-slash"></i>
+                        <div>No students enrolled in this section yet.</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let tableHTML = `
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Student Number</th>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            students.forEach((student, index) => {
+                tableHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><strong>${student.student_number}</strong></td>
+                        <td>${student.last_name}</td>
+                        <td>${student.first_name}</td>
+                        <td>${student.email || '-'}</td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+        }
+        
+        // Close modal
+        function closeStudentsModal() {
+            const modal = document.getElementById('studentsModal');
+            modal.classList.remove('show');
+            currentSectionData = null;
+            currentStudentsData = [];
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('studentsModal');
+            if (event.target === modal) {
+                closeStudentsModal();
+            }
+        }
+        
+        // Export students to CSV
+        function exportStudentsCSV() {
+            if (!currentStudentsData || currentStudentsData.length === 0) {
+                alert('No students to export');
+                return;
+            }
+            
+            const rows = [
+                ['Polytechnic University of the Philippines - Taguig Campus'],
+                [`Class Roster - ${currentSectionData.course_code} ${currentSectionData.section_code}`],
+                [],
+                ['#', 'Student Number', 'Last Name', 'First Name', 'Email']
+            ];
+            
+            currentStudentsData.forEach((student, index) => {
+                rows.push([
+                    index + 1,
+                    student.student_number,
+                    student.last_name,
+                    student.first_name,
+                    student.email || ''
+                ]);
+            });
+            
+            const csv = rows.map(row => 
+                row.map(field => {
+                    const str = String(field).replace(/"/g, '""');
+                    return /[",\n]/.test(str) ? `"${str}"` : str;
+                }).join(',')
+            ).join('\n');
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `class_roster_${currentSectionData.course_code}_${currentSectionData.section_code}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Export students to PDF
+        function exportStudentsPDF() {
+            if (!currentStudentsData || currentStudentsData.length === 0) {
+                alert('No students to export');
+                return;
+            }
+            
+            const rowsHTML = currentStudentsData.map((student, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${student.student_number}</td>
+                    <td>${student.last_name}</td>
+                    <td>${student.first_name}</td>
+                    <td>${student.email || '-'}</td>
+                </tr>
+            `).join('');
+            
+            const html = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Class Roster</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        h1, h2 { color: #1e3c72; text-align: center; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+                        th { background: #f8f9fa; font-weight: bold; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Polytechnic University of the Philippines</h1>
+                    <h2>Taguig Campus - Class Roster</h2>
+                    <p><strong>Course:</strong> ${currentSectionData.course_code} - ${currentSectionData.course_title}</p>
+                    <p><strong>Section:</strong> ${currentSectionData.section_code}</p>
+                    <p><strong>Total Students:</strong> ${currentStudentsData.length}</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Student Number</th>
+                                <th>Last Name</th>
+                                <th>First Name</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rowsHTML}
+                        </tbody>
+                    </table>
+                    <script>window.onload = () => window.print();<\/script>
+                </body>
+                </html>
+            `;
+            
+            const w = window.open('', '_blank');
+            if (!w) {
+                alert('Popup blocked. Please allow popups to export PDF.');
+                return;
+            }
+            w.document.write(html);
+            w.document.close();
+        }
+        
+        // Export My Classes to CSV
+        let myClassesData = [];
+        
+        function exportMyClassesCSV() {
+            if (!myClassesData || myClassesData.length === 0) {
+                alert('No classes to export');
+                return;
+            }
+            
+            const facultyName = document.getElementById('fullName').textContent;
+            const employeeId = document.getElementById('employeeId').textContent;
+            
+            const rows = [
+                ['Polytechnic University of the Philippines - Taguig Campus'],
+                [`Faculty: ${facultyName} (${employeeId})`],
+                ['My Teaching Classes'],
+                [],
+                ['Course Code', 'Course Name', 'Section', 'Schedule', 'Room', 'Students']
+            ];
+            
+            myClassesData.forEach(cls => {
+                const schedule = cls.day_pattern ? 
+                    `${cls.day_pattern} ${cls.start_time || ''} - ${cls.end_time || ''}` : 
+                    'TBA';
+                rows.push([
+                    cls.course_code,
+                    cls.course_title,
+                    cls.section_code,
+                    schedule,
+                    cls.room_name || 'TBA',
+                    `${cls.student_count}/${cls.max_capacity || '-'}`
+                ]);
+            });
+            
+            const csv = rows.map(row => 
+                row.map(field => {
+                    const str = String(field).replace(/"/g, '""');
+                    return /[",\n]/.test(str) ? `"${str}"` : str;
+                }).join(',')
+            ).join('\n');
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `my_classes_${employeeId}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Export My Classes to PDF
+        function exportMyClassesPDF() {
+            if (!myClassesData || myClassesData.length === 0) {
+                alert('No classes to export');
+                return;
+            }
+            
+            const facultyName = document.getElementById('fullName').textContent;
+            const employeeId = document.getElementById('employeeId').textContent;
+            
+            const rowsHTML = myClassesData.map(cls => {
+                const schedule = cls.day_pattern ? 
+                    `${cls.day_pattern} ${cls.start_time || ''} - ${cls.end_time || ''}` : 
+                    'TBA';
+                return `
+                    <tr>
+                        <td>${cls.course_code}</td>
+                        <td>${cls.course_title}</td>
+                        <td>${cls.section_code}</td>
+                        <td>${schedule}</td>
+                        <td>${cls.room_name || 'TBA'}</td>
+                        <td>${cls.student_count}/${cls.max_capacity || '-'}</td>
+                    </tr>
+                `;
+            }).join('');
+            
+            const html = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>My Classes</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        h1, h2 { color: #1e3c72; text-align: center; }
+                        .info { text-align: center; margin-bottom: 20px; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+                        th { background: #f8f9fa; font-weight: bold; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Polytechnic University of the Philippines</h1>
+                    <h2>Taguig Campus - My Teaching Classes</h2>
+                    <div class="info">
+                        <p><strong>Faculty:</strong> ${facultyName}</p>
+                        <p><strong>Employee ID:</strong> ${employeeId}</p>
+                        <p><strong>Total Classes:</strong> ${myClassesData.length}</p>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                                <th>Section</th>
+                                <th>Schedule</th>
+                                <th>Room</th>
+                                <th>Students</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rowsHTML}
+                        </tbody>
+                    </table>
+                    <script>window.onload = () => window.print();<\/script>
+                </body>
+                </html>
+            `;
+            
+            const w = window.open('', '_blank');
+            if (!w) {
+                alert('Popup blocked. Please allow popups to export PDF.');
+                return;
+            }
+            w.document.write(html);
+            w.document.close();
+        }
+    </script>
+</body>
+</html>

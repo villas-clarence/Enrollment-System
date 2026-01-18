@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login Test - PUP Taguig</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            background: rgba(255,255,255,0.95);
+            max-width: 1000px;
+            margin: 0 auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            padding: 40px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .search-box {
+            margin-bottom: 20px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+        
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .student-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .student-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .student-no {
+            font-weight: 600;
+            color: #1e3c72;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .student-name {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .student-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .login-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(40,167,69,0.3);
+        }
+        
+        .actions {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 0 10px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Student Login Test</div>
+            <div class="subtitle">Test login for any of the 124 students in the database</div>
+        </div>
+        
+        <div class="actions">
+            <a href="login.html" class="btn">
+                <i class="fas fa-sign-in-alt"></i> Go to Login Page
+            </a>
+            <button onclick="loadStudents()" class="btn">
+                <i class="fas fa-refresh"></i> Refresh List
+            </button>
+        </div>
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search students by name or student number..." onkeyup="searchStudents()">
+        </div>
+        
+        <div id="studentList" class="student-grid">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                Loading students...
+            </div>
+        </div>
+        
+        <div style="background: #e9ecef; padding: 20px; border-radius: 10px; margin-top: 20px;">
+            <h3 style="color: #1e3c72; margin-bottom: 10px;">
+                <i class="fas fa-info-circle"></i> How to Test:
+            </h3>
+            <ul style="color: #666; line-height: 1.6;">
+                <li><strong>Username:</strong> Use any Student Number from the list above</li>
+                <li><strong>Password:</strong> Use "student123" for all students</li>
+                <li><strong>Role:</strong> Select "Student" in the login form</li>
+                <li>After login, you'll be redirected to the student dashboard</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        let allStudents = [];
+        
+        async function loadStudents() {
+            try {
+                const response = await fetch('api/student_list.php?limit=50');
+                const data = await response.json();
+                
+                if (data.success) {
+                    allStudents = data.data;
+                    displayStudents(allStudents);
+                    
+                    document.querySelector('.subtitle').textContent = 
+                        `Test login for any of the ${data.total} students in the database (showing ${data.showing})`;
+                } else {
+                    document.getElementById('studentList').innerHTML = 
+                        '<div class="loading" style="color: red;">Failed to load students</div>';
+                }
+            } catch (error) {
+                console.error('Error loading students:', error);
+                document.getElementById('studentList').innerHTML = 
+                    '<div class="loading" style="color: red;">Error loading students</div>';
+            }
+        }
+        
+        function displayStudents(students) {
+            const container = document.getElementById('studentList');
+            
+            if (students.length === 0) {
+                container.innerHTML = '<div class="loading">No students found</div>';
+                return;
+            }
+            
+            container.innerHTML = students.map(student => `
+                <div class="student-card">
+                    <div class="student-no">${student.student_no}</div>
+                    <div class="student-name">${student.full_name}</div>
+                    <div class="student-info">Year ${student.year_level} | ${student.email}</div>
+                    <button class="login-btn" onclick="testLogin('${student.student_no}')">
+                        <i class="fas fa-sign-in-alt"></i> Test Login
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        function searchStudents() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allStudents.filter(student => 
+                student.student_no.toLowerCase().includes(searchTerm) ||
+                student.full_name.toLowerCase().includes(searchTerm)
+            );
+            displayStudents(filtered);
+        }
+        
+        function testLogin(studentNo) {
+            // Store the student number in sessionStorage for auto-fill
+            sessionStorage.setItem('testStudentNo', studentNo);
+            // Redirect to login page
+            window.location.href = 'login.html';
+        }
+        
+        // Load students on page load
+        document.addEventListener('DOMContentLoaded', loadStudents);
+    </script>
+</body>
+</html>

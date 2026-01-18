@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Faculty Registration Flow</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { background-color: #d4edda; }
+        .error { background-color: #f8d7da; }
+        button { padding: 10px 15px; margin: 5px; }
+        pre { background: #f8f9fa; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Faculty Registration System Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Load Faculty List</h2>
+        <button onclick="testFacultyList()">Test Faculty API</button>
+        <div id="faculty-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Load Departments</h2>
+        <button onclick="testDepartments()">Test Department API</button>
+        <div id="dept-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: Faculty Registration Page</h2>
+        <button onclick="openFacultyRegistration()">Open Faculty Registration</button>
+        <p>This will open the faculty registration page in a new tab.</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 4: Register.html Redirect</h2>
+        <button onclick="testRegisterRedirect()">Test Register Redirect</button>
+        <p>This will test if register.html redirects to faculty_register.html.</p>
+    </div>
+
+    <script>
+        async function testFacultyList() {
+            const resultDiv = document.getElementById('faculty-result');
+            try {
+                const response = await fetch('api/instructor.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultDiv.className = 'success';
+                    resultDiv.innerHTML = `
+                        <h3>✅ Faculty API Success</h3>
+                        <p>Found ${data.data.length} faculty members</p>
+                        <p>Sample faculty: ${data.data[0].first_name} ${data.data[0].last_name} (${data.data[0].dept_name})</p>
+                        <details>
+                            <summary>View Full Response</summary>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </details>
+                    `;
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Faculty API Error</h3>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+        
+        async function testDepartments() {
+            const resultDiv = document.getElementById('dept-result');
+            try {
+                const response = await fetch('api/department.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultDiv.className = 'success';
+                    resultDiv.innerHTML = `
+                        <h3>✅ Department API Success</h3>
+                        <p>Found ${data.data.length} departments</p>
+                        <ul>
+                            ${data.data.map(dept => `<li>${dept.dept_code} - ${dept.dept_name}</li>`).join('')}
+                        </ul>
+                    `;
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Department API Error</h3>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+        
+        function openFacultyRegistration() {
+            window.open('faculty_register.html', '_blank');
+        }
+        
+        function testRegisterRedirect() {
+            window.open('register.html', '_blank');
+        }
+    </script>
+</body>
+</html>
+</content>
+</invoke>

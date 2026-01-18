@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUP Taguig - Faculty Registration</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        
+        body { 
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
+            min-height:100vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .register-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .university-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+
+        
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42,82,152,0.1);
+        }
+        
+        input:disabled {
+            background: #f8f9fa;
+            color: #666;
+        }
+        
+        .faculty-info-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #2a5298;
+        }
+        
+        #faculty_select {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        #faculty_select option:disabled {
+            color: #999 !important;
+            background-color: #f5f5f5 !important;
+            font-style: italic;
+        }
+        
+        .password-group {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+        }
+        
+        /* Hide browser's native password reveal icon */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear,
+        input[type="password"]::-webkit-credentials-auto-fill-button,
+        input[type="password"]::-webkit-clear-button {
+            display: none !important;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(30,60,114,0.3);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .faculty-info {
+            background: #e8f5e8;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .faculty-info h3 {
+            color: #155724;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .faculty-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-label {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .detail-value {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .login-link {
+            text-align: center;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        .login-link a {
+            color: #2a5298;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .register-container {
+                padding: 30px 20px;
+            }
+            
+            .form-row, .faculty-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="header">
+            <div class="university-logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="title">Faculty Registration</div>
+            <div class="subtitle">Polytechnic University of the Philippines - Taguig Campus</div>
+        </div>
+        
+        <!-- Back Button -->
+        <div style="margin-bottom: 15px;">
+            <a href="register.html" style="display: inline-flex; align-items: center; gap: 5px; text-decoration: none; color: white; font-size: 0.9rem; padding: 8px 12px; border-radius: 20px; background: linear-gradient(135deg, #1e3c72, #2a5298); transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(30,60,114,0.2);" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(30,60,114,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(30,60,114,0.2)'">
+                <i class="fas fa-arrow-left" style="font-size: 0.8rem;"></i>
+                Back
+            </a>
+        </div>
+        
+
+        
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+        
+        <!-- Step 1: Faculty Selection -->
+        <div id="lookupSection" class="form-section active">
+            <div class="form-group">
+                <label for="account_type">Account Type <span style="color: red;">*</span></label>
+                <select id="account_type" disabled>
+                    <option value="faculty">Faculty - Faculty Member</option>
+                </select>
+            </div>
+            
+            <div class="faculty-info-section">
+                <h3 style="color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    Faculty Information
+                </h3>
+                
+                <div class="form-group">
+                    <label for="faculty_select">Find Your Instructor Record</label>
+                    <select id="faculty_select" onchange="selectFaculty()" required>
+                        <option value="create_new">-- I don't have an existing record (Create New) --</option>
+                    </select>
+                    <small style="color: #666; font-size: 0.8rem; margin-top: 5px; display: block;">
+                        Select your instructor record if you're already registered in the system
+                    </small>
+                </div>
+            </div>
+            
+            <button type="button" class="btn btn-primary" onclick="proceedToAccountCreation()" id="proceedBtn">
+                <i class="fas fa-arrow-right"></i> Continue
+            </button>
+        </div>
+        
+        <!-- Step 2: Faculty Found - Create Account -->
+        <div id="createAccountSection" class="form-section">
+            <div id="facultyInfo" class="faculty-info" style="display: none;">
+                <h3>
+                    <i class="fas fa-user-check"></i>
+                    Faculty Found!
+                </h3>
+                <div class="faculty-details" id="facultyDetails">
+                    <!-- Faculty details will be populated here -->
+                </div>
+            </div>
+            
+            <form onsubmit="createAccount(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="username">Username <span style="color: red;">*</span></label>
+                        <input type="text" id="username" name="username" readonly>
+                        <small style="color: #666; font-size: 0.8rem;">Your employee ID will be used as username</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="your.email@pup.edu.ph" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contact_number">Contact Number (Optional)</label>
+                        <input type="tel" id="contact_number" name="contact_number" placeholder="09123456789">
+                    </div>
+                    <div class="form-group">
+                        <!-- Empty for spacing -->
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group password-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                        <i class="fas fa-eye password-toggle" onclick="togglePassword('password')"></i>
+                    </div>
+                    <div class="form-group password-group">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required>
+                        <i class="fas fa-eye password-toggle" onclick="togglePassword('confirm_password')"></i>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn btn-secondary" onclick="goBackToLookup()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-user-plus"></i> Create Account
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Step 2: Full Registration -->
+        <div id="fullRegistrationSection" class="form-section">
+            <form onsubmit="registerNewFaculty(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="new_first_name">First Name</label>
+                        <input type="text" id="new_first_name" name="first_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new_last_name">Last Name</label>
+                        <input type="text" id="new_last_name" name="last_name" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="new_employee_id">Employee ID</label>
+                        <input type="text" id="new_employee_id" name="employee_id" readonly style="background:#e9ecef;">
+                        <small style="color: #666; font-size: 0.8rem;">Auto-generated Employee ID</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="new_email">Email Address</label>
+                        <input type="email" id="new_email" name="email" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="new_department">Department</label>
+                    <select id="new_department" name="dept_id" required>
+                        <option value="">Select Department</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group password-group">
+                        <label for="new_password">Password</label>
+                        <input type="password" id="new_password" name="password" required>
+                        <i class="fas fa-eye password-toggle" onclick="togglePassword('new_password')"></i>
+                    </div>
+                    <div class="form-group password-group">
+                        <label for="new_confirm_password">Confirm Password</label>
+                        <input type="password" id="new_confirm_password" name="confirm_password" required>
+                        <i class="fas fa-eye password-toggle" onclick="togglePassword('new_confirm_password')"></i>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn btn-secondary" onclick="goBackToLookup()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Register New Faculty
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="login-link">
+            Already have an account? <a href="faculty-login.html">Sign in here</a>
+        </div>
+    </div>
+    
+    <script>
+        let currentFaculty = null;
+        let departments = [];
+        let allFaculty = [];
+        
+        // Load departments and faculty on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initially disable the button
+            const proceedBtn = document.getElementById('proceedBtn');
+            proceedBtn.disabled = true;
+            proceedBtn.style.opacity = '0.5';
+            proceedBtn.style.cursor = 'not-allowed';
+            
+            await loadDepartments();
+            await loadAllFaculty();
+        });
+        
+        async function loadAllFaculty() {
+            try {
+                const response = await fetch('api/instructor.php');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    allFaculty = data.data;
+                    populateFacultySelect();
+                } else {
+                    throw new Error(data.message || 'Failed to load faculty');
+                }
+            } catch (error) {
+                console.error('Error loading faculty:', error);
+                showError('Failed to load faculty list: ' + error.message + '. Please refresh the page.');
+            }
+        }
+        
+        async function loadDepartments() {
+            try {
+                const response = await fetch('api/department.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    departments = data.data;
+                    populateDepartmentSelect();
+                }
+            } catch (error) {
+                console.error('Error loading departments:', error);
+            }
+        }
+        
+        function populateDepartmentSelect() {
+            const select = document.getElementById('new_department');
+            select.innerHTML = '<option value="">Select Department</option>';
+            
+            departments.forEach(dept => {
+                const option = document.createElement('option');
+                option.value = dept.dept_id;
+                option.textContent = `${dept.dept_code} - ${dept.dept_name}`;
+                select.appendChild(option);
+            });
+        }
+        
+        function populateFacultySelect() {
+            const select = document.getElementById('faculty_select');
+            select.innerHTML = '<option value="create_new">-- I don\'t have an existing record (Create New) --</option>';
+            
+            // Group ALL faculty by department
+            const facultyByDept = {};
+            allFaculty.forEach(faculty => {
+                const deptName = faculty.dept_name || 'Unknown Department';
+                if (!facultyByDept[deptName]) {
+                    facultyByDept[deptName] = [];
+                }
+                facultyByDept[deptName].push(faculty);
+            });
+            
+            // Add faculty to select, organized by department
+            Object.keys(facultyByDept).sort().forEach(deptName => {
+                const deptGroup = document.createElement('optgroup');
+                deptGroup.label = deptName;
+                
+                facultyByDept[deptName].forEach(faculty => {
+                    const option = document.createElement('option');
+                    option.value = faculty.instructor_id;
+                    option.textContent = `${faculty.first_name} ${faculty.last_name} (${faculty.employee_id || 'No Employee ID'})`;
+                    option.dataset.facultyData = JSON.stringify(faculty);
+                    
+                    // Show status but keep ALL options clickable
+                    if (faculty.password && faculty.password !== '' && faculty.password !== null) {
+                        option.textContent += ' 🔐 Has Account';
+                        option.style.color = '#007bff';
+                        option.style.fontWeight = '500';
+                    } else {
+                        option.textContent += ' 📝 Needs Registration';
+                        option.style.color = '#28a745';
+                        option.style.fontWeight = '500';
+                    }
+                    
+                    deptGroup.appendChild(option);
+                });
+                
+                select.appendChild(deptGroup);
+            });
+            
+            // If no faculty at all, show message
+            if (allFaculty.length === 0) {
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'No faculty found in database';
+                option.disabled = true;
+                select.appendChild(option);
+            }
+            
+            // Trigger selectFaculty if "create_new" is already selected
+            if (select.value === 'create_new') {
+                selectFaculty();
+            }
+        }
+        
+        function selectFaculty() {
+            const select = document.getElementById('faculty_select');
+            const proceedBtn = document.getElementById('proceedBtn');
+            
+            if (select.value) {
+                const selectedOption = select.options[select.selectedIndex];
+                
+                if (selectedOption.dataset.facultyData) {
+                    // Existing faculty selected
+                    currentFaculty = JSON.parse(selectedOption.dataset.facultyData);
+                    proceedBtn.disabled = false;
+                    proceedBtn.style.opacity = '1';
+                    proceedBtn.style.cursor = 'pointer';
+                    hideMessages();
+                } else if (select.value === 'create_new') {
+                    // Create new faculty selected
+                    currentFaculty = null;
+                    proceedBtn.disabled = false;
+                    proceedBtn.style.opacity = '1';
+                    proceedBtn.style.cursor = 'pointer';
+                    hideMessages();
+                } else {
+                    proceedBtn.disabled = true;
+                    proceedBtn.style.opacity = '0.5';
+                    proceedBtn.style.cursor = 'not-allowed';
+                    hideMessages();
+                }
+            } else {
+                proceedBtn.disabled = true;
+                proceedBtn.style.opacity = '0.5';
+                proceedBtn.style.cursor = 'not-allowed';
+                hideMessages();
+            }
+        }
+        
+        function proceedToAccountCreation() {
+            if (currentFaculty) {
+                // Check if faculty already has account
+                if (currentFaculty.password && currentFaculty.password !== '' && currentFaculty.password !== null) {
+                    // Faculty has account - redirect to login
+                    showSuccess(`${currentFaculty.first_name} ${currentFaculty.last_name} already has an account. Redirecting to login page...`);
+                    setTimeout(() => {
+                        window.location.href = 'faculty-login.html';
+                    }, 2000);
+                } else {
+                    // Faculty needs to register - show account creation form
+                    showFacultyFound();
+                }
+            } else {
+                // Create completely new faculty
+                showFullRegistration();
+            }
+        }
+        
+        function showFacultyFound() {
+            // No need to update step indicator since we only have one step
+            // Just switch sections and show faculty info
+            
+            // Show faculty info
+            const facultyDetails = document.getElementById('facultyDetails');
+            if (facultyDetails && currentFaculty) {
+                facultyDetails.innerHTML = `
+                    <div class="detail-item">
+                        <span class="detail-label">Name</span>
+                        <span class="detail-value">${currentFaculty.first_name} ${currentFaculty.last_name}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Employee ID</span>
+                        <span class="detail-value">${currentFaculty.employee_id || 'Not set'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Department</span>
+                        <span class="detail-value">${currentFaculty.dept_name}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Position</span>
+                        <span class="detail-value">${currentFaculty.position || 'Not set'}</span>
+                    </div>
+                `;
+            }
+            
+            // Pre-fill username field with employee ID
+            const usernameField = document.getElementById('username');
+            if (usernameField && currentFaculty) {
+                usernameField.value = currentFaculty.employee_id || currentFaculty.instructor_id;
+            }
+            
+            const facultyInfo = document.getElementById('facultyInfo');
+            if (facultyInfo) {
+                facultyInfo.style.display = 'block';
+            }
+            
+            // Switch sections
+            document.getElementById('lookupSection').classList.remove('active');
+            document.getElementById('createAccountSection').classList.add('active');
+            
+            hideMessages();
+        }
+        
+        function showFullRegistration() {
+            // No need to update step indicator since we only have one step
+            // Just switch sections
+            
+            // Switch sections
+            document.getElementById('lookupSection').classList.remove('active');
+            document.getElementById('fullRegistrationSection').classList.add('active');
+            
+            // Auto-generate Employee ID
+            generateEmployeeId();
+            
+            hideMessages();
+        }
+        
+        function generateEmployeeId() {
+            const year = new Date().getFullYear();
+            // Get the next number based on existing faculty count
+            const nextNum = allFaculty.length + 1;
+            const paddedNum = String(nextNum).padStart(3, '0');
+            const employeeId = `FAC-${year}-${paddedNum}`;
+            document.getElementById('new_employee_id').value = employeeId;
+        }
+        
+        async function createAccount(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Validate passwords match
+            if (data.password !== data.confirm_password) {
+                showError('Passwords do not match!');
+                return;
+            }
+            
+            // Prepare data for existing faculty
+            const registrationData = {
+                role: 'faculty',
+                existing_faculty: true,
+                employee_id: currentFaculty.employee_id,
+                instructor_id: currentFaculty.instructor_id,
+                first_name: currentFaculty.first_name,
+                last_name: currentFaculty.last_name,
+                email: data.email,
+                password: data.password,
+                contact_number: data.contact_number
+            };
+            
+            try {
+                const response = await fetch('api/register.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(registrationData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess('Account created successfully! You can now login.');
+                    setTimeout(() => {
+                        window.location.href = 'faculty-login.html';
+                    }, 2000);
+                } else {
+                    showError(result.message || 'Account creation failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showError('Account creation failed. Please check your connection and try again.');
+            }
+        }
+        
+        async function registerNewFaculty(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Validate passwords match
+            if (data.password !== data.confirm_password) {
+                showError('Passwords do not match!');
+                return;
+            }
+            
+            // Prepare data for new faculty
+            data.role = 'faculty';
+            data.existing_faculty = false;
+            
+            try {
+                const response = await fetch('api/register.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess('Faculty account created successfully! You can now login.');
+                    setTimeout(() => {
+                        window.location.href = 'faculty-login.html';
+                    }, 2000);
+                } else {
+                    showError(result.message || 'Registration failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showError('Registration failed. Please check your connection and try again.');
+            }
+        }
+        
+        function goBackToLookup() {
+            // No need to reset step indicator since we only have one step
+            // Just switch back to lookup section
+            
+            // Switch sections
+            document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active'));
+            document.getElementById('lookupSection').classList.add('active');
+            
+            // Reset forms and selections
+            document.querySelectorAll('form').forEach(form => form.reset());
+            const facultySelect = document.getElementById('faculty_select');
+            if (facultySelect) {
+                facultySelect.value = '';
+            }
+            const proceedBtn = document.getElementById('proceedBtn');
+            if (proceedBtn) {
+                proceedBtn.disabled = true;
+                proceedBtn.style.opacity = '0.5';
+                proceedBtn.style.cursor = 'not-allowed';
+            }
+            currentFaculty = null;
+            
+            hideMessages();
+        }
+        
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+        
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
+        function hideMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

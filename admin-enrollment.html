@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Student Enrollment</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1e3c72, #2a5298); min-height:100vh; padding:20px; }
+        .header { background:#fff; padding:15px 25px; border-radius:10px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; }
+        .header h1 { color:#1e3c72; font-size:1.3rem; }
+        .back-btn { background:#6c757d; color:#fff; padding:10px 20px; border-radius:8px; text-decoration:none; font-weight:600; }
+        .container { background:#fff; border-radius:10px; padding:25px; max-width:1400px; margin:0 auto; }
+        .grid { display:grid; grid-template-columns:300px 1fr; gap:20px; }
+        .panel { background:#f8f9fa; border-radius:10px; padding:20px; }
+        .panel h3 { color:#1e3c72; margin-bottom:15px; font-size:1rem; border-bottom:2px solid #1e3c72; padding-bottom:10px; }
+        label { display:block; font-weight:600; font-size:0.85rem; color:#333; margin-bottom:5px; }
+        input, select { width:100%; padding:10px; border:2px solid #ddd; border-radius:6px; font-size:0.9rem; margin-bottom:15px; }
+        input:focus, select:focus { border-color:#1e3c72; outline:none; }
+        .student-info { background:#d4edda; padding:15px; border-radius:8px; margin-bottom:15px; display:none; }
+        .student-info.show { display:block; }
+        .student-info p { margin:5px 0; font-size:0.9rem; }
+        .student-info .name { font-weight:700; font-size:1.1rem; color:#155724; }
+        .year-notice { background:#cce5ff; color:#004085; padding:10px; border-radius:6px; margin-bottom:15px; font-size:0.85rem; }
+        .courses-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px; max-height:500px; overflow-y:auto; }
+        .course-card { background:#fff; border:2px solid #ddd; border-radius:8px; padding:12px; cursor:pointer; transition:all 0.2s; }
+        .course-card:hover { border-color:#1e3c72; }
+        .course-card.selected { border-color:#28a745; background:#d4edda; }
+        .course-card.enrolled { border-color:#6c757d; background:#e9ecef; opacity:0.7; cursor:not-allowed; }
+        .course-code { font-weight:700; color:#1e3c72; }
+        .course-title { font-size:0.85rem; color:#666; margin-top:5px; }
+        .course-units { font-size:0.75rem; background:#e9ecef; padding:2px 8px; border-radius:10px; display:inline-block; margin-top:5px; }
+        .selected-panel { margin-top:15px; }
+        .selected-count { background:#1e3c72; color:#fff; padding:8px 15px; border-radius:6px; font-size:0.9rem; margin-bottom:10px; }
+        .selected-list { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:15px; }
+        .selected-tag { background:#28a745; color:#fff; padding:4px 10px; border-radius:15px; font-size:0.8rem; display:flex; align-items:center; gap:5px; }
+        .selected-tag i { cursor:pointer; }
+        .enroll-btn { width:100%; padding:15px; background:linear-gradient(135deg,#28a745,#20c997); color:#fff; border:none; border-radius:8px; font-size:1rem; font-weight:700; cursor:pointer; }
+        .enroll-btn:disabled { background:#ccc; cursor:not-allowed; }
+        .warning { background:#fff3cd; color:#856404; padding:10px; border-radius:6px; font-size:0.85rem; text-align:center; margin-bottom:10px; }
+        .alert { padding:12px; border-radius:6px; margin-bottom:15px; display:none; }
+        .alert.show { display:block; }
+        .alert-success { background:#d4edda; color:#155724; }
+        .alert-error { background:#f8d7da; color:#721c24; }
+        .search-box { position:relative; }
+        .search-box i { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:#999; }
+        @media(max-width:900px) { .grid { grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-user-plus"></i> Admin - Enroll Student to Courses</h1>
+        <a href="admin-dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
+
+    <div class="container">
+        <div id="alertBox" class="alert"></div>
+        <div class="grid">
+            <!-- Left Panel -->
+            <div class="panel">
+                <h3><i class="fas fa-user"></i> Select Student</h3>
+                <label>Search Student</label>
+                <div class="search-box">
+                    <input type="text" id="studentSearch" placeholder="Name or Student No...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <label>Student</label>
+                <select id="studentSelect">
+                    <option value="">-- Select Student --</option>
+                </select>
+                
+                <div id="studentInfo" class="student-info">
+                    <p class="name" id="sName"></p>
+                    <p><strong>Student No:</strong> <span id="sNo"></span></p>
+                    <p><strong>Program:</strong> <span id="sProg"></span></p>
+                    <p><strong>Year Level:</strong> <span id="sYear"></span></p>
+                </div>
+
+                <div class="selected-panel">
+                    <div class="selected-count">
+                        Selected: <strong id="selectedCount">0</strong> / 8 minimum
+                    </div>
+                    <div id="selectedList" class="selected-list"></div>
+                    <div id="warningMsg" class="warning" style="display:none;">
+                        <i class="fas fa-exclamation-triangle"></i> Select at least 8 courses
+                    </div>
+                    <button id="enrollBtn" class="enroll-btn" disabled onclick="enrollStudent()">
+                        <i class="fas fa-check"></i> Enroll Student
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="panel">
+                <h3><i class="fas fa-book"></i> Available Courses (<span id="courseCount">0</span>)</h3>
+                <div id="yearNotice" class="year-notice" style="display:none;">
+                    <i class="fas fa-info-circle"></i> Showing courses for <strong id="yearText"></strong>
+                </div>
+                <label>Search Course</label>
+                <input type="text" id="courseSearch" placeholder="Course code or title...">
+                <div id="coursesGrid" class="courses-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        let students = [], courses = [], selectedCourses = [], studentEnrollments = [];
+        let selectedStudent = null;
+        const MIN_COURSES = 8;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStudents();
+            loadCourses();
+            document.getElementById('studentSearch').addEventListener('input', filterStudents);
+            document.getElementById('studentSelect').addEventListener('change', onStudentSelect);
+            document.getElementById('courseSearch').addEventListener('input', displayCourses);
+        });
+
+        async function loadStudents() {
+            const res = await fetch('api/student.php?limit=1000');
+            const data = await res.json();
+            if (data.success) {
+                students = data.data.filter(s => !s.is_deleted);
+                populateStudents(students);
+            }
+        }
+
+        async function loadCourses() {
+            const res = await fetch('api/course.php');
+            const data = await res.json();
+            if (data.success) courses = data.data;
+        }
+
+        function populateStudents(list) {
+            const sel = document.getElementById('studentSelect');
+            sel.innerHTML = '<option value="">-- Select Student --</option>';
+            list.forEach(s => {
+                sel.innerHTML += `<option value="${s.student_id}">${s.last_name}, ${s.first_name} (${s.student_no})</option>`;
+            });
+        }
+
+        function filterStudents() {
+            const q = document.getElementById('studentSearch').value.toLowerCase();
+            const filtered = students.filter(s => 
+                s.first_name.toLowerCase().includes(q) || 
+                s.last_name.toLowerCase().includes(q) || 
+                s.student_no.toLowerCase().includes(q)
+            );
+            populateStudents(filtered);
+        }
+
+        async function onStudentSelect() {
+            const id = document.getElementById('studentSelect').value;
+            if (!id) {
+                selectedStudent = null;
+                document.getElementById('studentInfo').classList.remove('show');
+                document.getElementById('yearNotice').style.display = 'none';
+                selectedCourses = [];
+                updateUI();
+                return;
+            }
+            
+            selectedStudent = students.find(s => s.student_id == id);
+            document.getElementById('sName').textContent = selectedStudent.first_name + ' ' + selectedStudent.last_name;
+            document.getElementById('sNo').textContent = selectedStudent.student_no;
+            document.getElementById('sProg').textContent = selectedStudent.program_name || 'N/A';
+            document.getElementById('sYear').textContent = selectedStudent.year_level ? 'Year ' + selectedStudent.year_level : 'N/A';
+            document.getElementById('studentInfo').classList.add('show');
+            
+            // Show year notice
+            if (selectedStudent.year_level) {
+                const yearNames = {1:'1st Year', 2:'2nd Year', 3:'3rd Year', 4:'4th Year'};
+                document.getElementById('yearText').textContent = yearNames[selectedStudent.year_level] || 'Year ' + selectedStudent.year_level;
+                document.getElementById('yearNotice').style.display = 'block';
+            }
+            
+            // Load student's current enrollments
+            await loadStudentEnrollments(id);
+            
+            // Clear selections
+            selectedCourses = [];
+            updateUI();
+        }
+
+        async function loadStudentEnrollments(studentId) {
+            try {
+                const res = await fetch('api/section_enrollment.php');
+                const data = await res.json();
+                if (data.success) {
+                    studentEnrollments = data.data.filter(e => e.student_id == studentId).map(e => e.course_id);
+                }
+            } catch(e) { studentEnrollments = []; }
+        }
+
+        function displayCourses() {
+            const grid = document.getElementById('coursesGrid');
+            const search = document.getElementById('courseSearch').value.toLowerCase();
+            
+            // Filter by year level if student selected
+            let filtered = courses;
+            if (selectedStudent && selectedStudent.year_level) {
+                filtered = courses.filter(c => c.year_level == selectedStudent.year_level);
+            }
+            
+            // Filter by search
+            if (search) {
+                filtered = filtered.filter(c => 
+                    c.course_code.toLowerCase().includes(search) || 
+                    c.course_title.toLowerCase().includes(search)
+                );
+            }
+            
+            document.getElementById('courseCount').textContent = filtered.length;
+            
+            grid.innerHTML = filtered.map(c => {
+                const isSelected = selectedCourses.includes(c.course_id);
+                const isEnrolled = studentEnrollments.includes(c.course_id);
+                
+                return `
+                    <div class="course-card ${isSelected ? 'selected' : ''} ${isEnrolled ? 'enrolled' : ''}" 
+                         onclick="${!isEnrolled ? `toggleCourse(${c.course_id})` : ''}"
+                         title="${isEnrolled ? 'Already enrolled' : 'Click to select'}">
+                        <div class="course-code">${c.course_code}</div>
+                        <div class="course-title">${c.course_title}</div>
+                        <span class="course-units">${c.units} units</span>
+                        ${isEnrolled ? '<span style="float:right;color:#6c757d;font-size:0.75rem;">✓ Enrolled</span>' : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleCourse(courseId) {
+            if (!selectedStudent) {
+                showAlert('Please select a student first', 'error');
+                return;
+            }
+            
+            const idx = selectedCourses.indexOf(courseId);
+            if (idx >= 0) {
+                selectedCourses.splice(idx, 1);
+            } else {
+                selectedCourses.push(courseId);
+            }
+            updateUI();
+        }
+
+        function removeCourse(courseId) {
+            const idx = selectedCourses.indexOf(courseId);
+            if (idx >= 0) selectedCourses.splice(idx, 1);
+            updateUI();
+        }
+
+        function updateUI() {
+            // Update count
+            document.getElementById('selectedCount').textContent = selectedCourses.length;
+            
+            // Update selected list
+            const list = document.getElementById('selectedList');
+            list.innerHTML = selectedCourses.map(id => {
+                const c = courses.find(x => x.course_id == id);
+                return `<span class="selected-tag">${c.course_code} <i class="fas fa-times" onclick="removeCourse(${id})"></i></span>`;
+            }).join('');
+            
+            // Update warning and button
+            const warning = document.getElementById('warningMsg');
+            const btn = document.getElementById('enrollBtn');
+            
+            if (!selectedStudent) {
+                warning.style.display = 'none';
+                btn.disabled = true;
+            } else if (selectedCourses.length < MIN_COURSES) {
+                warning.style.display = 'block';
+                btn.disabled = true;
+            } else {
+                warning.style.display = 'none';
+                btn.disabled = false;
+            }
+            
+            displayCourses();
+        }
+
+        async function enrollStudent() {
+            if (!selectedStudent || selectedCourses.length < MIN_COURSES) return;
+            
+            const btn = document.getElementById('enrollBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enrolling...';
+            
+            let success = 0, fail = 0;
+            let errors = [];
+            
+            for (const courseId of selectedCourses) {
+                try {
+                    const res = await fetch('api/course_enrollment.php', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            student_id: selectedStudent.student_id,
+                            course_id: courseId,
+                            date_enrolled: new Date().toISOString().split('T')[0],
+                            status: 'Enrolled'
+                        })
+                    });
+                    const data = await res.json();
+                    console.log('Enroll response:', data); // Debug
+                    if (data.success) success++;
+                    else {
+                        fail++;
+                        errors.push(data.message);
+                    }
+                } catch(e) { 
+                    fail++; 
+                    errors.push(e.message);
+                    console.error('Enroll error:', e);
+                }
+            }
+            
+            if (success > 0) {
+                showAlert(`Successfully enrolled in ${success} course(s)!`, 'success');
+                selectedCourses = [];
+                await loadStudentEnrollments(selectedStudent.student_id);
+                updateUI();
+            }
+            if (fail > 0) {
+                console.log('Errors:', errors);
+                showAlert(`Failed to enroll in ${fail} course(s): ${errors[0] || 'Unknown error'}`, 'error');
+            }
+            
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check"></i> Enroll Student';
+            updateUI();
+        }
+
+        function showAlert(msg, type) {
+            const alert = document.getElementById('alertBox');
+            alert.className = `alert show alert-${type}`;
+            alert.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':'exclamation-circle'}"></i> ${msg}`;
+            setTimeout(() => alert.classList.remove('show'), 4000);
+        }
+    </script>
+</body>
+</html>

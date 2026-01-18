@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUP Taguig - Registration</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        
+        body { 
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
+            min-height:100vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .register-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+        }
+        
+        .university-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+        
+        .role-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .role-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .role-card:hover {
+            border-color: #2a5298;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(42,82,152,0.15);
+        }
+        
+        .role-icon {
+            font-size: 2.5rem;
+            color: #2a5298;
+            margin-bottom: 15px;
+        }
+        
+        .role-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 8px;
+        }
+        
+        .role-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .login-link {
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        .login-link a {
+            color: #2a5298;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .register-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="university-logo">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="title">Registration</div>
+        <div class="subtitle">Polytechnic University of the Philippines - Taguig Campus</div>
+        
+        <div class="role-selection">
+            <a href="student_register.html" class="role-card">
+                <div class="role-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <div class="role-title">Student Registration</div>
+                <div class="role-description">
+                    Register as a student to access courses, enrollment, and academic services
+                </div>
+            </a>
+            
+            <a href="faculty_register.html" class="role-card">
+                <div class="role-icon">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <div class="role-title">Faculty Registration</div>
+                <div class="role-description">
+                    Register as faculty to manage courses, students, and academic content
+                </div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

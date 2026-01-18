@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section Management - PUP Taguig</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { 
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
+            min-height:100vh; 
+            padding:20px; 
+        }
+        .container { 
+            background: rgba(255,255,255,0.95); 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15); 
+            padding: 40px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .header h1 {
+            color: #1e3c72;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header h1 i {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+        }
+        .back-btn {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .backup-restore-btns {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-backup {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-restore {
+            background: linear-gradient(135deg, #ffc107, #ff9800);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-backup:hover, .btn-restore:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #dc3545;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+        
+        /* Form Section */
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid #e9ecef;
+        }
+        .form-title {
+            font-size: 1.2rem;
+            color: #1e3c72;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+        }
+        .form-group input,
+        .form-group select {
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220,53,69,0.1);
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        /* Table */
+        .table-section {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        .table-header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .table-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 8px 15px;
+        }
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            width: 200px;
+        }
+        .search-box input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #1e3c72;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+        tr:hover {
+            background: rgba(220,53,69,0.03);
+        }
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .badge-course {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+        }
+        .badge-section {
+            background: #e9ecef;
+            color: #333;
+        }
+        .badge-instructor {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+        .action-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        .edit-btn {
+            background: #ffc107;
+            color: #333;
+        }
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .modal-header h3 {
+            color: #1e3c72;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 20px; }
+            .header { flex-direction: column; gap: 15px; }
+            .form-grid { grid-template-columns: 1fr; }
+            table { font-size: 0.85rem; }
+            th, td { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-layer-group"></i> Section Management</h1>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <div class="backup-restore-btns">
+                    <button class="btn-backup" onclick="backupSections()">
+                        <i class="fas fa-download"></i> Backup
+                    </button>
+                    <button class="btn-restore" onclick="document.getElementById('restoreFile').click()">
+                        <i class="fas fa-upload"></i> Restore
+                    </button>
+                    <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="restoreSections(event)">
+                </div>
+                <a href="admin-dashboard.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-number" id="totalSections">0</div>
+                <div class="stat-label">Total Sections</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalCourses">0</div>
+                <div class="stat-label">Courses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalInstructors">0</div>
+                <div class="stat-label">Instructors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="unassignedSections">0</div>
+                <div class="stat-label">Unassigned</div>
+            </div>
+        </div>
+        
+        <!-- Add Section Form -->
+        <div class="form-section">
+            <div class="form-title">
+                <i class="fas fa-plus-circle"></i>
+                <span id="formTitle">Add New Section</span>
+            </div>
+            <form id="sectionForm">
+                <input type="hidden" id="sectionId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Section Code *</label>
+                        <select id="sectionCode" required>
+                            <option value="">Select Section Code</option>
+                            <option value="DIT 1-1">DIT 1-1</option>
+                            <option value="DIT 2-1">DIT 2-1</option>
+                            <option value="DIT 3-1">DIT 3-1</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Course *</label>
+                        <select id="courseId" required>
+                            <option value="">Select Course</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Instructor</label>
+                        <select id="instructorId">
+                            <option value="">Select Instructor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Term</label>
+                        <select id="termId">
+                            <option value="">Select Term</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Day Pattern</label>
+                        <select id="dayPattern">
+                            <option value="">Select Days</option>
+                            <option value="M">Monday</option>
+                            <option value="T">Tuesday</option>
+                            <option value="W">Wednesday</option>
+                            <option value="Th">Thursday</option>
+                            <option value="F">Friday</option>
+                            <option value="S">Saturday</option>
+                            <option value="MW">Mon/Wed</option>
+                            <option value="TTh">Tue/Thu</option>
+                            <option value="MWF">Mon/Wed/Fri</option>
+                            <option value="TThS">Tue/Thu/Sat</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="time" id="startTime">
+                    </div>
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="time" id="endTime">
+                    </div>
+                    <div class="form-group">
+                        <label>Room</label>
+                        <select id="roomId">
+                            <option value="">Select Room</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Section
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="clearForm()">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Sections Table -->
+        <div class="table-section">
+            <div class="table-header">
+                <h3><i class="fas fa-list"></i> All Sections</h3>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search sections..." onkeyup="filterTable()">
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Section</th>
+                        <th>Course</th>
+                        <th>Instructor</th>
+                        <th>Schedule</th>
+                        <th>Room</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="sectionsTbody">
+                    <tr><td colspan="7" class="no-data">Loading sections...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let sections = [];
+        let courses = [];
+        let instructors = [];
+        let terms = [];
+        let rooms = [];
+        
+        // Load all data on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            await Promise.all([
+                loadCourses(),
+                loadInstructors(),
+                loadTerms(),
+                loadRooms()
+            ]);
+            await loadSections();
+        });
+        
+        // Load courses for dropdown
+        async function loadCourses() {
+            try {
+                const res = await fetch('api/course.php');
+                const data = await res.json();
+                if (data.success) {
+                    courses = data.data;
+                    const select = document.getElementById('courseId');
+                    select.innerHTML = '<option value="">Select Course</option>';
+                    courses.forEach(c => {
+                        select.innerHTML += `<option value="${c.course_id}">${c.course_code} - ${c.course_title}</option>`;
+                    });
+                    document.getElementById('totalCourses').textContent = courses.length;
+                }
+            } catch (e) {
+                console.error('Error loading courses:', e);
+            }
+        }
+        
+        // Load instructors for dropdown
+        async function loadInstructors() {
+            try {
+                const res = await fetch('api/instructor.php');
+                const data = await res.json();
+                if (data.success) {
+                    instructors = data.data;
+                    const select = document.getElementById('instructorId');
+                    select.innerHTML = '<option value="">Select Instructor</option>';
+                    instructors.forEach(i => {
+                        select.innerHTML += `<option value="${i.instructor_id}">${i.first_name} ${i.last_name}</option>`;
+                    });
+                    document.getElementById('totalInstructors').textContent = instructors.length;
+                }
+            } catch (e) {
+                console.error('Error loading instructors:', e);
+            }
+        }
+        
+        // Load terms for dropdown
+        async function loadTerms() {
+            try {
+                const res = await fetch('api/term.php');
+                const data = await res.json();
+                if (data.success) {
+                    terms = data.data;
+                    const select = document.getElementById('termId');
+                    select.innerHTML = '<option value="">Select Term</option>';
+                    terms.forEach(t => {
+                        select.innerHTML += `<option value="${t.term_id}">${t.term_code}</option>`;
+                    });
+                }
+            } catch (e) {
+                console.error('Error loading terms:', e);
+            }
+        }
+        
+        // Load rooms for dropdown
+        async function loadRooms() {
+            try {
+                const res = await fetch('api/room.php');
+                const data = await res.json();
+                if (data.success) {
+                    rooms = data.data;
+                    const select = document.getElementById('roomId');
+                    select.innerHTML = '<option value="">Select Room</option>';
+                    rooms.forEach(r => {
+                        select.innerHTML += `<option value="${r.room_id}">${r.room_code} - ${r.building || 'N/A'}</option>`;
+                    });
+                }
+            } catch (e) {
+                console.error('Error loading rooms:', e);
+            }
+        }
+        
+        // Load sections
+        async function loadSections() {
+            try {
+                const res = await fetch('api/section.php');
+                const data = await res.json();
+                if (data.success) {
+                    sections = data.data;
+                    renderSections();
+                    updateStats();
+                }
+            } catch (e) {
+                console.error('Error loading sections:', e);
+                document.getElementById('sectionsTbody').innerHTML = '<tr><td colspan="7" class="no-data">Error loading sections</td></tr>';
+            }
+        }
+        
+        // Render sections table
+        function renderSections(filteredSections = null) {
+            const tbody = document.getElementById('sectionsTbody');
+            const data = filteredSections || sections;
+            
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="no-data">No sections found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = data.map(s => {
+                const instructorName = s.instructor_first_name 
+                    ? `${s.instructor_first_name} ${s.instructor_last_name}` 
+                    : '<span style="color:#999">Not assigned</span>';
+                
+                const schedule = s.day_pattern 
+                    ? `${s.day_pattern} ${formatTime(s.start_time)} - ${formatTime(s.end_time)}`
+                    : '<span style="color:#999">TBA</span>';
+                
+                const room = s.room_code || '<span style="color:#999">TBA</span>';
+                
+                return `
+                    <tr>
+                        <td><span class="badge badge-section">${s.section_code}</span></td>
+                        <td><span class="badge badge-course">${s.course_code || 'N/A'}</span> ${s.course_title || ''}</td>
+                        <td>${s.instructor_first_name ? `<span class="badge badge-instructor">${instructorName}</span>` : instructorName}</td>
+                        <td>${schedule}</td>
+                        <td>${room}</td>
+                        <td class="action-btns">
+                            <button class="action-btn edit-btn" onclick="editSection(${s.section_id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete-btn" onclick="deleteSection(${s.section_id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // Format time
+        function formatTime(timeStr) {
+            if (!timeStr) return '';
+            const [hours, minutes] = timeStr.split(':');
+            const h = parseInt(hours);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            const hour12 = h % 12 || 12;
+            return `${hour12}:${minutes} ${ampm}`;
+        }
+        
+        // Update stats
+        function updateStats() {
+            document.getElementById('totalSections').textContent = sections.length;
+            const unassigned = sections.filter(s => !s.instructor_id).length;
+            document.getElementById('unassignedSections').textContent = unassigned;
+        }
+        
+        // Filter table
+        function filterTable() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = sections.filter(s => 
+                s.section_code.toLowerCase().includes(search) ||
+                (s.course_code && s.course_code.toLowerCase().includes(search)) ||
+                (s.course_title && s.course_title.toLowerCase().includes(search)) ||
+                (s.instructor_first_name && s.instructor_first_name.toLowerCase().includes(search)) ||
+                (s.instructor_last_name && s.instructor_last_name.toLowerCase().includes(search))
+            );
+            renderSections(filtered);
+        }
+        
+        // Form submission
+        document.getElementById('sectionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const sectionId = document.getElementById('sectionId').value;
+            const payload = {
+                section_code: document.getElementById('sectionCode').value,
+                course_id: document.getElementById('courseId').value || null,
+                instructor_id: document.getElementById('instructorId').value || null,
+                term_id: document.getElementById('termId').value || null,
+                day_pattern: document.getElementById('dayPattern').value || null,
+                start_time: document.getElementById('startTime').value || null,
+                end_time: document.getElementById('endTime').value || null,
+                room_id: document.getElementById('roomId').value || null
+            };
+            
+            try {
+                const url = sectionId ? `api/section.php?id=${sectionId}` : 'api/section.php';
+                const method = sectionId ? 'PUT' : 'POST';
+                
+                const res = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    alert(sectionId ? 'Section updated successfully!' : 'Section created successfully!');
+                    clearForm();
+                    loadSections();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (e) {
+                console.error('Error saving section:', e);
+                alert('Error saving section');
+            }
+        });
+        
+        // Edit section
+        function editSection(id) {
+            const section = sections.find(s => s.section_id === id);
+            if (!section) return;
+            
+            document.getElementById('sectionId').value = section.section_id;
+            document.getElementById('sectionCode').value = section.section_code || '';
+            document.getElementById('courseId').value = section.course_id || '';
+            document.getElementById('instructorId').value = section.instructor_id || '';
+            document.getElementById('termId').value = section.term_id || '';
+            document.getElementById('dayPattern').value = section.day_pattern || '';
+            document.getElementById('startTime').value = section.start_time || '';
+            document.getElementById('endTime').value = section.end_time || '';
+            document.getElementById('roomId').value = section.room_id || '';
+            
+            document.getElementById('formTitle').textContent = 'Edit Section';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Delete section
+        async function deleteSection(id) {
+            if (!confirm('Are you sure you want to delete this section?')) return;
+            
+            try {
+                const res = await fetch(`api/section.php?id=${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                
+                if (data.success) {
+                    alert('Section deleted (soft delete)');
+                    loadSections();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (e) {
+                console.error('Error deleting section:', e);
+                alert('Error deleting section');
+            }
+        }
+        
+        // Clear form
+        function clearForm() {
+            document.getElementById('sectionForm').reset();
+            document.getElementById('sectionId').value = '';
+            document.getElementById('formTitle').textContent = 'Add New Section';
+        }
+        
+        // Backup sections
+        async function backupSections() {
+            try {
+                const response = await fetch('api/backup_restore.php?action=backup&table=tblsection');
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `tblsection_backup_${new Date().toISOString().slice(0,10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                alert('Backup downloaded successfully!');
+            } catch (error) {
+                console.error('Error backing up sections:', error);
+                alert('Error creating backup. Please try again.');
+            }
+        }
+        
+        // Restore sections
+        async function restoreSections(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!confirm('WARNING: This will replace all existing sections with the backup data. Continue?')) {
+                event.target.value = '';
+                return;
+            }
+            
+            try {
+                const text = await file.text();
+                const backupData = JSON.parse(text);
+                
+                if (!backupData.data || !Array.isArray(backupData.data)) {
+                    throw new Error('Invalid backup file format');
+                }
+                
+                const response = await fetch('api/backup_restore.php?action=restore&table=tblsection', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(backupData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(result.message);
+                    loadSections();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error restoring sections:', error);
+                alert('Error restoring backup: ' + error.message);
+            }
+            
+            event.target.value = '';
+        }
+    </script>
+</body>
+</html>
